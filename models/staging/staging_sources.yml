@@ -1,0 +1,38 @@
+version: 2
+
+sources:
+  - name: weather_data
+    schema: s_jingwang
+    tables:
+      - name: harvey_weather_daily_raw_data
+        identifier: harvey_weather_daily_raw_data
+      - name: harvey_weather_hourly_raw_data
+        identifier: harvey_weather_hourly_raw_data
+
+  - name: flights_data
+    schema: s_jingwang
+    tables:
+      - name: flights
+        identifier: harvey_flights_all
+      - name: airports
+        identifier: airports
+      - name: regions
+        identifier: regions_2
+
+models:
+  - name: harvey_stg_weather_daily
+    description: "Flattened daily weather data from the raw JSON source."
+    columns:
+      - name: airport_code
+        description: "IATA airport code."
+      - name: station_id
+        description: "Weather station identifier."
+      - name: date
+        description: "Date of observation."
+      - name: avg_temp_c
+        description: "Average temperature (°C)."
+      - name: precipitation_mm
+        description: "Precipitation amount in millimeters."
+
+
+

@@ -1,41 +1,405 @@
 version: 2
 
 models:
-  - name: prep_weather_summary
-    description: "Monthly aggregates of average temperature and precipitation per airport."
-    
-  - name: prep_airports
-    description: "Reordered airport table for reporting."
+
+  - name: harvey_prep_airports
+    description: "Prepped airport table for downstream modeling, including geographic and regional details."
     columns:
       - name: faa
+        description: "FAA airport code (unique identifier for the airport)."
         tests: [not_null, unique]
+
+      - name: name
+        description: "Official name of the airport."
+
+      - name: city
+        description: "City where the airport is located."
+
       - name: country
+        description: "Country where the airport is located."
         tests: [not_null]
 
-  - name: prep_weather_daily
-    description: "Daily weather data with derived calendar and seasonal features."
-    columns:
-      - name: date
-        tests: [not_null]
-      - name: season
-        tests:
-          - accepted_values:
-              values: ['winter', 'spring', 'summer', 'autumn']
+      - name: region
+        description: "Region code or state where the airport is located."
 
-  - name: prep_weather_hourly
-    description: "Hourly weather data enriched with temporal and categorical features."
-    columns:
-      - name: timestamp
-        tests: [not_null]
-      - name: day_part
-        tests:
-          - accepted_values:
-              values: ['night', 'day', 'evening']
+      - name: lat
+        description: "Latitude of the airport in decimal degrees."
 
-  - name: prep_flights
-    description: "Cleaned flights data with intervals and distance conversions."
+      - name: lon
+        description: "Longitude of the airport in decimal degrees."
+
+      - name: alt
+        description: "Altitude of the airport in feet above sea level."
+
+      - name: tz
+        description: "Time zone of the airport relative to UTC."
+
+      - name: dst
+        description: "Daylight saving time indicator for the airport."
+    
+  - name: harvey_prep_flights
+    description: "Prepped flights table including both departure and arrival flights, with flight schedules, delays, aircraft, and derived metrics for modeling."
     columns:
       - name: flight_date
+        description: "Date of the flight."
         tests: [not_null]
+
+      - name: dep_time
+        description: "Actual departure time of the flight (local time)."
+
+      - name: sched_dep_time
+        description: "Scheduled departure time of the flight (local time)."
+
+      - name: dep_delay
+        description: "Departure delay in minutes. Negative values indicate early departures."
+
+      - name: arr_time
+        description: "Actual arrival time of the flight (local time)."
+
+      - name: sched_arr_time
+        description: "Scheduled arrival time of the flight (local time)."
+
+      - name: arr_delay
+        description: "Arrival delay in minutes. Negative values indicate early arrivals."
+
+      - name: airline
+        description: "Airline code operating the flight."
+
+      - name: tail_number
+        description: "Unique aircraft tail number."
+
+      - name: flight_number
+        description: "Flight number assigned by the airline."
+
+      - name: origin
+        description: "Origin airport code (IATA)."
+        tests: [not_null]
+
+      - name: dest
+        description: "Destination airport code (IATA)."
+        tests: [not_null]
+
+      - name: air_time
+        description: "Time spent in the air in minutes."
+
+      - name: actual_elapsed_time
+        description: "Total elapsed time from departure to arrival in minutes."
+
+      - name: distance
+        description: "Distance between origin and destination airports in miles."
+
+      - name: cancelled
+        description: "Indicator if the flight was cancelled (1 = cancelled, 0 = not cancelled)."
+
+      - name: diverted
+        description: "Indicator if the flight was diverted (1 = diverted, 0 = not diverted)."
+
+      - name: dep_delay_interval
+        description: "Categorized interval for departure delay (e.g., 0-15, 16-30 minutes)."
+
+      - name: arr_delay_interval
+        description: "Categorized interval for arrival delay (e.g., 0-15, 16-30 minutes)."
+
       - name: distance_km
+        description: "Distance between origin and destination airports in kilometers."
+
+      - name: flight_datetime
+        description: "Exact timestamp of the flight departure (derived from flight_date + dep_time)."
+
+      - name: flight_datetime_hour
+        description: "Truncated timestamp to the hour of flight departure, useful for hourly aggregation."
+   
+  - name: harvey_prep_depature_flights
+    description: "Prepped departure flights table including flight schedules, delays, aircraft, and derived metrics for modeling."
+    columns:
+      - name: flight_date
+        description: "Date of the flight."
         tests: [not_null]
+
+      - name: dep_time
+        description: "Actual departure time of the flight (local time)."
+
+      - name: sched_dep_time
+        description: "Scheduled departure time of the flight (local time)."
+
+      - name: dep_delay
+        description: "Departure delay in minutes. Negative values indicate early departures."
+
+      - name: arr_time
+        description: "Actual arrival time of the flight (local time)."
+
+      - name: sched_arr_time
+        description: "Scheduled arrival time of the flight (local time)."
+
+      - name: arr_delay
+        description: "Arrival delay in minutes. Negative values indicate early arrivals."
+
+      - name: airline
+        description: "Airline code operating the flight."
+
+      - name: tail_number
+        description: "Unique aircraft tail number."
+
+      - name: flight_number
+        description: "Flight number assigned by the airline."
+
+      - name: origin
+        description: "Origin airport code (IATA)."
+        tests: [not_null]
+
+      - name: dest
+        description: "Destination airport code (IATA)."
+        tests: [not_null]
+
+      - name: air_time
+        description: "Time spent in the air in minutes."
+
+      - name: actual_elapsed_time
+        description: "Total elapsed time from departure to arrival in minutes."
+
+      - name: distance
+        description: "Distance between origin and destination airports in miles."
+
+      - name: cancelled
+        description: "Indicator if the flight was cancelled (1 = cancelled, 0 = not cancelled)."
+
+      - name: diverted
+        description: "Indicator if the flight was diverted (1 = diverted, 0 = not diverted)."
+
+      - name: dep_delay_interval
+        description: "Categorized interval for departure delay (e.g., 0-15, 16-30 minutes)."
+
+      - name: arr_delay_interval
+        description: "Categorized interval for arrival delay (e.g., 0-15, 16-30 minutes)."
+
+      - name: distance_km
+        description: "Distance between origin and destination airports in kilometers."
+
+      - name: flight_datetime
+        description: "Exact timestamp of the flight departure (derived from date + dep_time)."
+
+      - name: flight_datetime_hour
+        description: "Truncated timestamp to the hour of flight departure, useful for hourly aggregation."
+
+  - name: harvey_prep_arrival_flights
+    description: "Prepped arrival flights table including flight schedules, delays, aircraft, and derived metrics for modeling."
+    columns:
+      - name: flight_date
+        description: "Date of the flight."
+        tests: [not_null]
+
+      - name: dep_time
+        description: "Actual departure time of the flight (local time)."
+
+      - name: sched_dep_time
+        description: "Scheduled departure time of the flight (local time)."
+
+      - name: dep_delay
+        description: "Departure delay in minutes. Negative values indicate early departures."
+
+      - name: arr_time
+        description: "Actual arrival time of the flight (local time)."
+
+      - name: sched_arr_time
+        description: "Scheduled arrival time of the flight (local time)."
+
+      - name: arr_delay
+        description: "Arrival delay in minutes. Negative values indicate early arrivals."
+
+      - name: airline
+        description: "Airline code operating the flight."
+
+      - name: tail_number
+        description: "Unique aircraft tail number."
+
+      - name: flight_number
+        description: "Flight number assigned by the airline."
+
+      - name: origin
+        description: "Origin airport code (IATA)."
+        tests: [not_null]
+
+      - name: dest
+        description: "Destination airport code (IATA)."
+        tests: [not_null]
+
+      - name: air_time
+        description: "Time spent in the air in minutes."
+
+      - name: actual_elapsed_time
+        description: "Total elapsed time from departure to arrival in minutes."
+
+      - name: distance
+        description: "Distance between origin and destination airports in miles."
+
+      - name: cancelled
+        description: "Indicator if the flight was cancelled (1 = cancelled, 0 = not cancelled)."
+
+      - name: diverted
+        description: "Indicator if the flight was diverted (1 = diverted, 0 = not diverted)."
+
+      - name: dep_delay_interval
+        description: "Categorized interval for departure delay (e.g., 0-15, 16-30 minutes)."
+
+      - name: arr_delay_interval
+        description: "Categorized interval for arrival delay (e.g., 0-15, 16-30 minutes)."
+
+      - name: distance_km
+        description: "Distance between origin and destination airports in kilometers."
+
+      - name: flight_datetime
+        description: "Exact timestamp of the flight departure (derived from date + dep_time)."
+
+      - name: flight_datetime_hour
+        description: "Truncated timestamp to the hour of flight departure, useful for hourly aggregation."    
+  
+  - name: harvey_prep_weather_daily
+    description: "Prepped daily weather data at airport level, including temperature, precipitation, wind, pressure, and temporal attributes for downstream modeling."
+    columns:
+      - name: airport_code
+        description: "IATA airport code."
+        tests: [not_null]
+
+      - name: station_id
+        description: "Weather station identifier."
+
+      - name: date
+        description: "Date of the weather observation."
+        tests: [not_null]
+
+      - name: avg_temp_c
+        description: "Average daily temperature in degrees Celsius."
+
+      - name: min_temp_c
+        description: "Minimum daily temperature in degrees Celsius."
+
+      - name: max_temp_c
+        description: "Maximum daily temperature in degrees Celsius."
+
+      - name: precipitation_mm
+        description: "Total daily precipitation in millimeters."
+
+      - name: max_snow_mm
+        description: "Maximum daily snowfall in millimeters."
+
+      - name: avg_wind_direction
+        description: "Average daily wind direction in degrees."
+
+      - name: avg_wind_speed_kmh
+        description: "Average daily wind speed in kilometers per hour."
+
+      - name: wind_peakgust_kmh
+        description: "Maximum wind gust recorded during the day in kilometers per hour."
+
+      - name: avg_pressure_hpa
+        description: "Average daily atmospheric pressure in hectopascals (hPa)."
+
+      - name: sun_minutes
+        description: "Total minutes of sunlight recorded during the day."
+
+      - name: day
+        description: "Day of the month (1–31)."
+
+      - name: week
+        description: "ISO week number of the year."
+
+      - name: month
+        description: "Month number (1–12)."
+
+      - name: year
+        description: "Year of the observation."
+
+      - name: day_name
+        description: "Name of the day (e.g., Monday, Tuesday)."
+
+      - name: week_name
+        description: "Week label (e.g., Week 1, Week 2)."
+
+      - name: month_name
+        description: "Month name (e.g., January, February)."
+
+      - name: season
+        description: "Season of the year (e.g., Winter, Spring, Summer, Fall)."
+
+  - name: harvey_prep_weather_hourly
+    description: "Prepped hourly weather data at airport level, including temperature, humidity, wind, pressure, precipitation, and temporal attributes for downstream modeling and aggregation."
+    columns:
+      - name: airport_code
+        description: "IATA airport code."
+        tests: [not_null]
+
+      - name: station_id
+        description: "Weather station identifier."
+
+      - name: timestamp
+        description: "Exact timestamp of the weather observation."
+        tests: [not_null]
+
+      - name: avg_temp_c
+        description: "Average temperature during the hour in degrees Celsius."
+
+      - name: dew_point_in_c
+        description: "Dew point temperature during the hour in degrees Celsius."
+
+      - name: humidity_in_percent
+        description: "Relative humidity during the hour in percent."
+
+      - name: precipitation_mm
+        description: "Total precipitation during the hour in millimeters."
+
+      - name: max_snow_mm
+        description: "Maximum snowfall recorded during the hour in millimeters."
+
+      - name: avg_wind_direction
+        description: "Average wind direction during the hour in degrees."
+
+      - name: avg_wind_speed
+        description: "Average wind speed during the hour."
+
+      - name: avg_peakgust
+        description: "Maximum wind gust recorded during the hour."
+
+      - name: avg_pressure_hpa
+        description: "Average atmospheric pressure during the hour in hectopascals (hPa)."
+
+      - name: sun_minutes
+        description: "Minutes of sunlight during the hour."
+
+      - name: weather_condition_code
+        description: "Code representing weather condition (e.g., clear, rain, snow)."
+
+      - name: date
+        description: "Date of the observation."
+
+      - name: day
+        description: "Day of the month (1–31)."
+
+      - name: week
+        description: "ISO week number of the year."
+
+      - name: month
+        description: "Month number (1–12)."
+
+      - name: year
+        description: "Year of the observation."
+
+      - name: day_name
+        description: "Name of the day (e.g., Monday, Tuesday)."
+
+      - name: week_name
+        description: "Week label (e.g., Week 1, Week 2)."
+
+      - name: month_name
+        description: "Month name (e.g., January, February)."
+
+      - name: time
+        description: "Time portion of the timestamp (HH:MM:SS)."
+
+      - name: time_in_hour_minute
+        description: "Time portion truncated to hour and minute (HH:MM) for aggregation."
+
+      - name: day_part
+        description: "Part of the day (e.g., Morning, Afternoon, Evening, Night) for easier temporal grouping."
+
+            
+

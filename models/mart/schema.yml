@@ -1,22 +1,770 @@
 version: 2
 
 models:
-  - name: mart_sales_performance
-    description: "Monthly sales performance by category"
-
+  - name: harvey_mart_route_stats
+    description: "Aggregated flight statistics by origin and destination route for reporting and analysis."
     columns:
-      - name: order_year
-        description: "Year when the order was placed"
+      - name: origin
+        description: "Origin airport code (IATA)."
         tests: [not_null]
 
-      - name: order_month
-        description: "Month when the order was placed"
+      - name: origin_name
+        description: "Name of the origin airport."
+
+      - name: origin_city
+        description: "City where the origin airport is located."
+
+      - name: origin_country
+        description: "Country where the origin airport is located."
         tests: [not_null]
 
-      - name: category_name
-        description: "Product category"
+      - name: dest
+        description: "Destination airport code (IATA)."
         tests: [not_null]
-        
-      - name: total_revenue
-        description: "Sum of revenue for that period and category"
+
+      - name: dest_name
+        description: "Name of the destination airport."
+
+      - name: dest_city
+        description: "City where the destination airport is located."
+
+      - name: dest_country
+        description: "Country where the destination airport is located."
         tests: [not_null]
+
+      - name: total_flights
+        description: "Total number of flights operated on the route."
+        tests: [not_null]
+
+      - name: total_cancelled
+        description: "Total number of cancelled flights on the route."
+
+      - name: total_diverted
+        description: "Total number of diverted flights on the route."
+
+      - name: total_unique_airlines
+        description: "Number of distinct airlines operating on the route."
+
+      - name: total_unique_airplanes
+        description: "Number of distinct aircraft (by tail number) operating on the route."
+
+      - name: avg_actual_elapsed_time
+        description: "Average total elapsed flight time in minutes for the route."
+
+      - name: avg_arr_delay
+        description: "Average arrival delay in minutes for the route."
+
+      - name: min_arr_delay
+        description: "Minimum arrival delay in minutes for the route."
+
+      - name: max_arr_delay
+        description: "Maximum arrival delay in minutes for the route."
+
+  - name: harvey_mart_weather_hourly_to_daily_aggregation
+    description: "Daily weather metrics aggregated from hourly weather observations at the airport level."
+    columns:
+      - name: airport_code
+        description: "IATA airport code."
+        tests: [not_null]
+
+      - name: date
+        description: "Date of the aggregated weather observations."
+        tests: [not_null]
+
+      - name: avg_temp_c
+        description: "Average daily air temperature in degrees Celsius, aggregated from hourly observations."
+
+      - name: avg_humidity_in_percent
+        description: "Average daily relative humidity as a percentage, aggregated from hourly observations."
+
+      - name: total_prec_mm
+        description: "Total daily precipitation in millimeters, aggregated from hourly observations."
+
+      - name: avg_wind_direction
+        description: "Average daily wind direction in degrees, aggregated from hourly observations."
+
+      - name: avg_wind_speed_kmh
+        description: "Average daily wind speed in kilometers per hour, aggregated from hourly observations."
+
+      - name: avg_pressure_hpa
+        description: "Average daily atmospheric pressure in hectopascals (hPa), aggregated from hourly observations."
+
+  - name: harvey_mart_depature_flights_airport_hourly
+    description: "Hourly departure flight statistics aggregated at the airport level for reporting and analysis."
+    columns:
+      - name: airport_code
+        description: "IATA airport code for the departure airport."
+        tests: [not_null]
+
+      - name: flight_datetime_hour
+        description: "Timestamp representing the hour of the scheduled departure flights."
+        tests: [not_null]
+
+      - name: name
+        description: "Name of the departure airport."
+
+      - name: city
+        description: "City where the departure airport is located."
+
+      - name: country
+        description: "Country where the departure airport is located."
+        tests: [not_null]
+
+      - name: total_planned_departure_flights
+        description: "Total number of planned departure flights during the hour."
+
+      - name: total_cancelled_departure_flights
+        description: "Total number of cancelled departure flights during the hour."
+
+      - name: total_diverted_departure_flights
+        description: "Total number of diverted departure flights during the hour."
+
+      - name: total_actual_departure_flights
+        description: "Total number of flights that actually departed during the hour."
+
+      - name: total_unique_departure_airplanes
+        description: "Number of distinct aircraft (by tail number) departing during the hour."
+
+      - name: total_unique_departure_airlines
+        description: "Number of distinct airlines operating departures during the hour."
+
+      - name: avg_dep_delay
+        description: "Average departure delay in minutes for flights during the hour."
+    
+  - name: harvey_mart_arrival_flights_airport_hourly
+    description: "Hourly arrival flight statistics aggregated at the airport level for reporting and analysis."
+    columns:
+      - name: airport_code
+        description: "IATA airport code for the arrival airport."
+        tests: [not_null]
+
+      - name: flight_datetime_hour
+        description: "Timestamp representing the hour of the scheduled arrival flights."
+        tests: [not_null]
+
+      - name: name
+        description: "Name of the arrival airport."
+
+      - name: city
+        description: "City where the arrival airport is located."
+
+      - name: country
+        description: "Country where the arrival airport is located."
+        tests: [not_null]
+
+      - name: total_planned_arrival_flights
+        description: "Total number of planned arrival flights during the hour."
+
+      - name: total_cancelled_arrival_flights
+        description: "Total number of cancelled arrival flights during the hour."
+
+      - name: total_diverted_arrival_flights
+        description: "Total number of diverted arrival flights during the hour."
+
+      - name: total_actual_arrival_flights
+        description: "Total number of flights that actually arrived during the hour."
+
+      - name: total_unique_arrival_airplanes
+        description: "Number of distinct aircraft (by tail number) arriving during the hour."
+
+      - name: total_unique_arrival_airlines
+        description: "Number of distinct airlines operating arrivals during the hour."
+
+      - name: avg_arr_delay
+        description: "Average arrival delay in minutes for flights during the hour."
+    
+  - name: harvey_mart_flights_airport_hourly
+    description: "Hourly flight performance metrics aggregated at the airport level, covering planned, actual, cancelled, and diverted flights for both departures and arrivals."
+    columns:
+      - name: airport_code
+        description: "IATA airport code."
+        tests: [not_null]
+
+      - name: flight_datetime_hour
+        description: "Timestamp representing the hour of flight activity."
+        tests: [not_null]
+
+      - name: name
+        description: "Name of the airport."
+
+      - name: city
+        description: "City where the airport is located."
+
+      - name: country
+        description: "Country where the airport is located."
+        tests: [not_null]
+
+      - name: total_planned_flights
+        description: "Total number of planned flights during the hour."
+
+      - name: total_planned_departure_flights
+        description: "Total number of planned departure flights during the hour."
+
+      - name: total_planned_arrival_flights
+        description: "Total number of planned arrival flights during the hour."
+
+      - name: total_cancelled_flights
+        description: "Total number of cancelled flights during the hour."
+
+      - name: total_cancelled_departure_flights
+        description: "Total number of cancelled departure flights during the hour."
+
+      - name: total_cancelled_arrival_flights
+        description: "Total number of cancelled arrival flights during the hour."
+
+      - name: total_diverted_flights
+        description: "Total number of diverted flights during the hour."
+
+      - name: total_diverted_departure_flights
+        description: "Total number of diverted departure flights during the hour."
+
+      - name: total_diverted_arrival_flights
+        description: "Total number of diverted arrival flights during the hour."
+
+      - name: total_actual_flights
+        description: "Total number of flights that actually operated during the hour."
+
+      - name: total_actual_departure_flights
+        description: "Total number of flights that actually departed during the hour."
+
+      - name: total_actual_arrival_flights
+        description: "Total number of flights that actually arrived during the hour."
+
+      - name: total_cancellation_percentage
+        description: "Percentage of total planned flights that were cancelled during the hour."
+
+      - name: departure_cancellation_percentage
+        description: "Percentage of planned departure flights that were cancelled during the hour."
+
+      - name: arrival_cancellation_percentage
+        description: "Percentage of planned arrival flights that were cancelled during the hour."
+
+      - name: total_diversion_percentage
+        description: "Percentage of total flights that were diverted during the hour."
+
+      - name: departure_diversion_percentage
+        description: "Percentage of departure flights that were diverted during the hour."
+
+      - name: arrival_diversion_percentage
+        description: "Percentage of arrival flights that were diverted during the hour."
+
+      - name: total_unique_departure_airplanes
+        description: "Number of distinct aircraft (by tail number) used for departures during the hour."
+
+      - name: total_unique_arrival_airplanes
+        description: "Number of distinct aircraft (by tail number) used for arrivals during the hour."
+
+      - name: total_unique_departure_airlines
+        description: "Number of distinct airlines operating departures during the hour."
+
+      - name: total_unique_arrival_airlines
+        description: "Number of distinct airlines operating arrivals during the hour."
+
+      - name: avg_dep_delay
+        description: "Average departure delay in minutes for flights during the hour."
+
+      - name: avg_arr_delay
+        description: "Average arrival delay in minutes for flights during the hour."
+    
+  - name: harvey_mart_depature_flights_airport_daily
+    description: "Daily departure flight statistics aggregated at the airport level for reporting and analysis."
+    columns:
+      - name: airport_code
+        description: "IATA airport code for the departure airport."
+        tests: [not_null]
+
+      - name: flight_date
+        description: "Date of the departure flights."
+        tests: [not_null]
+
+      - name: name
+        description: "Name of the departure airport."
+
+      - name: city
+        description: "City where the departure airport is located."
+
+      - name: country
+        description: "Country where the departure airport is located."
+        tests: [not_null]
+
+      - name: total_planned_departure_flights
+        description: "Total number of planned departure flights on the date."
+
+      - name: total_cancelled_departure_flights
+        description: "Total number of cancelled departure flights on the date."
+
+      - name: total_diverted_departure_flights
+        description: "Total number of diverted departure flights on the date."
+
+      - name: total_actual_departure_flights
+        description: "Total number of flights that actually departed on the date."
+
+      - name: total_unique_departure_airplanes
+        description: "Number of distinct aircraft (by tail number) used for departures on the date."
+
+      - name: total_unique_departure_airlines
+        description: "Number of distinct airlines operating departures on the date."
+
+      - name: avg_dep_delay
+        description: "Average departure delay in minutes for flights on the date."
+    
+  - name: harvey_mart_arrival_flights_airport_daily
+    description: "Daily arrival flight statistics aggregated at the airport level for reporting and analysis."
+    columns:
+      - name: airport_code
+        description: "IATA airport code for the arrival airport."
+        tests: [not_null]
+
+      - name: flight_date
+        description: "Date of the arrival flights."
+        tests: [not_null]
+
+      - name: name
+        description: "Name of the arrival airport."
+
+      - name: city
+        description: "City where the arrival airport is located."
+
+      - name: country
+        description: "Country where the arrival airport is located."
+        tests: [not_null]
+
+      - name: total_planned_arrival_flights
+        description: "Total number of planned arrival flights on the date."
+
+      - name: total_cancelled_arrival_flights
+        description: "Total number of cancelled arrival flights on the date."
+
+      - name: total_diverted_arrival_flights
+        description: "Total number of diverted arrival flights on the date."
+
+      - name: total_actual_arrival_flights
+        description: "Total number of flights that actually arrived on the date."
+
+      - name: total_unique_arrival_airplanes
+        description: "Number of distinct aircraft (by tail number) used for arrivals on the date."
+
+      - name: total_unique_arrival_airlines
+        description: "Number of distinct airlines operating arrivals on the date."
+
+      - name: avg_arr_delay
+        description: "Average arrival delay in minutes for flights on the date."
+   
+  - name: harvey_mart_flights_airport_daily
+    description: "Daily flight performance metrics aggregated at the airport level, covering planned, actual, cancelled, and diverted flights for both departures and arrivals."
+    columns:
+      - name: airport_code
+        description: "IATA airport code."
+        tests: [not_null]
+
+      - name: flight_date
+        description: "Date of flight activity."
+        tests: [not_null]
+
+      - name: name
+        description: "Name of the airport."
+
+      - name: city
+        description: "City where the airport is located."
+
+      - name: country
+        description: "Country where the airport is located."
+        tests: [not_null]
+
+      - name: total_planned_flights
+        description: "Total number of planned flights on the date."
+
+      - name: total_planned_departure_flights
+        description: "Total number of planned departure flights on the date."
+
+      - name: total_planned_arrival_flights
+        description: "Total number of planned arrival flights on the date."
+
+      - name: total_cancelled_flights
+        description: "Total number of cancelled flights on the date."
+
+      - name: total_cancelled_departure_flights
+        description: "Total number of cancelled departure flights on the date."
+
+      - name: total_cancelled_arrival_flights
+        description: "Total number of cancelled arrival flights on the date."
+
+      - name: total_diverted_flights
+        description: "Total number of diverted flights on the date."
+
+      - name: total_diverted_departure_flights
+        description: "Total number of diverted departure flights on the date."
+
+      - name: total_diverted_arrival_flights
+        description: "Total number of diverted arrival flights on the date."
+
+      - name: total_actual_flights
+        description: "Total number of flights that actually operated on the date."
+
+      - name: total_actual_departure_flights
+        description: "Total number of flights that actually departed on the date."
+
+      - name: total_actual_arrival_flights
+        description: "Total number of flights that actually arrived on the date."
+
+      - name: total_cancellation_percentage
+        description: "Percentage of total planned flights that were cancelled on the date."
+
+      - name: departure_cancellation_percentage
+        description: "Percentage of planned departure flights that were cancelled on the date."
+
+      - name: arrival_cancellation_percentage
+        description: "Percentage of planned arrival flights that were cancelled on the date."
+
+      - name: total_diversion_percentage
+        description: "Percentage of total flights that were diverted on the date."
+
+      - name: departure_diversion_percentage
+        description: "Percentage of departure flights that were diverted on the date."
+
+      - name: arrival_diversion_percentage
+        description: "Percentage of arrival flights that were diverted on the date."
+
+      - name: total_unique_departure_airplanes
+        description: "Number of distinct aircraft (by tail number) used for departures on the date."
+
+      - name: total_unique_arrival_airplanes
+        description: "Number of distinct aircraft (by tail number) used for arrivals on the date."
+
+      - name: total_unique_departure_airlines
+        description: "Number of distinct airlines operating departures on the date."
+
+      - name: total_unique_arrival_airlines
+        description: "Number of distinct airlines operating arrivals on the date."
+
+      - name: avg_dep_delay
+        description: "Average departure delay in minutes for flights on the date."
+
+      - name: avg_arr_delay
+        description: "Average arrival delay in minutes for flights on the date."
+
+  - name: harvey_mart_depature_flights_airport_hourly_weather
+    description: "Hourly airport-level flight performance metrics enriched with weather conditions for departure analysis."
+    columns:
+      - name: airport_code
+        description: "IATA airport code."
+        tests: [not_null]
+
+      - name: flight_datetime_hour
+        description: "Timestamp representing the hour of flight and weather activity."
+        tests: [not_null]
+
+      - name: name
+        description: "Name of the airport."
+
+      - name: city
+        description: "City where the airport is located."
+
+      - name: country
+        description: "Country where the airport is located."
+        tests: [not_null]
+
+      - name: total_planned_flights
+        description: "Total number of planned flights during the hour."
+
+      - name: total_planned_departure_flights
+        description: "Total number of planned departure flights during the hour."
+
+      - name: total_planned_arrival_flights
+        description: "Total number of planned arrival flights during the hour."
+
+      - name: total_cancelled_flights
+        description: "Total number of cancelled flights during the hour."
+
+      - name: total_cancelled_departure_flights
+        description: "Total number of cancelled departure flights during the hour."
+
+      - name: total_cancelled_arrival_flights
+        description: "Total number of cancelled arrival flights during the hour."
+
+      - name: total_diverted_flights
+        description: "Total number of diverted flights during the hour."
+
+      - name: total_diverted_departure_flights
+        description: "Total number of diverted departure flights during the hour."
+
+      - name: total_diverted_arrival_flights
+        description: "Total number of diverted arrival flights during the hour."
+
+      - name: total_actual_flights
+        description: "Total number of flights that actually operated during the hour."
+
+      - name: total_actual_departure_flights
+        description: "Total number of flights that actually departed during the hour."
+
+      - name: total_actual_arrival_flights
+        description: "Total number of flights that actually arrived during the hour."
+
+      - name: total_cancellation_percentage
+        description: "Percentage of total planned flights that were cancelled during the hour."
+
+      - name: departure_cancellation_percentage
+        description: "Percentage of planned departure flights that were cancelled during the hour."
+
+      - name: arrival_cancellation_percentage
+        description: "Percentage of planned arrival flights that were cancelled during the hour."
+
+      - name: total_diversion_percentage
+        description: "Percentage of total flights that were diverted during the hour."
+
+      - name: departure_diversion_percentage
+        description: "Percentage of departure flights that were diverted during the hour."
+
+      - name: arrival_diversion_percentage
+        description: "Percentage of arrival flights that were diverted during the hour."
+
+      - name: total_unique_departure_airplanes
+        description: "Number of distinct aircraft (by tail number) used for departures during the hour."
+
+      - name: total_unique_arrival_airplanes
+        description: "Number of distinct aircraft (by tail number) used for arrivals during the hour."
+
+      - name: total_unique_departure_airlines
+        description: "Number of distinct airlines operating departures during the hour."
+
+      - name: total_unique_arrival_airlines
+        description: "Number of distinct airlines operating arrivals during the hour."
+
+      - name: avg_dep_delay
+        description: "Average departure delay in minutes for flights during the hour."
+
+      - name: avg_arr_delay
+        description: "Average arrival delay in minutes for flights during the hour."
+
+      - name: avg_temp_c
+        description: "Average air temperature during the hour in degrees Celsius."
+
+      - name: precipitation_mm
+        description: "Total precipitation during the hour in millimeters."
+
+      - name: avg_wind_speed
+        description: "Average wind speed during the hour."
+
+      - name: avg_wind_direction
+        description: "Average wind direction during the hour in degrees."
+
+      - name: avg_pressure_hpa
+        description: "Average atmospheric pressure during the hour in hectopascals (hPa)."
+
+  - name: harvey_mart_arrival_flights_airport_daily_weather
+    description: "Daily airport-level flight performance metrics enriched with weather conditions for arrival and departure analysis."
+    columns:
+      - name: airport_code
+        description: "IATA airport code."
+        tests: [not_null]
+
+      - name: flight_date
+        description: "Date of flight and weather activity."
+        tests: [not_null]
+
+      - name: name
+        description: "Name of the airport."
+
+      - name: city
+        description: "City where the airport is located."
+
+      - name: country
+        description: "Country where the airport is located."
+        tests: [not_null]
+
+      - name: total_planned_flights
+        description: "Total number of planned flights on the date."
+
+      - name: total_planned_departure_flights
+        description: "Total number of planned departure flights on the date."
+
+      - name: total_planned_arrival_flights
+        description: "Total number of planned arrival flights on the date."
+
+      - name: total_cancelled_flights
+        description: "Total number of cancelled flights on the date."
+
+      - name: total_cancelled_departure_flights
+        description: "Total number of cancelled departure flights on the date."
+
+      - name: total_cancelled_arrival_flights
+        description: "Total number of cancelled arrival flights on the date."
+
+      - name: total_diverted_flights
+        description: "Total number of diverted flights on the date."
+
+      - name: total_diverted_departure_flights
+        description: "Total number of diverted departure flights on the date."
+
+      - name: total_diverted_arrival_flights
+        description: "Total number of diverted arrival flights on the date."
+
+      - name: total_actual_flights
+        description: "Total number of flights that actually operated on the date."
+
+      - name: total_actual_departure_flights
+        description: "Total number of flights that actually departed on the date."
+
+      - name: total_actual_arrival_flights
+        description: "Total number of flights that actually arrived on the date."
+
+      - name: total_cancellation_percentage
+        description: "Percentage of total planned flights that were cancelled on the date."
+
+      - name: departure_cancellation_percentage
+        description: "Percentage of planned departure flights that were cancelled on the date."
+
+      - name: arrival_cancellation_percentage
+        description: "Percentage of planned arrival flights that were cancelled on the date."
+
+      - name: total_diversion_percentage
+        description: "Percentage of total flights that were diverted on the date."
+
+      - name: departure_diversion_percentage
+        description: "Percentage of departure flights that were diverted on the date."
+
+      - name: arrival_diversion_percentage
+        description: "Percentage of arrival flights that were diverted on the date."
+
+      - name: total_unique_departure_airplanes
+        description: "Number of distinct aircraft (by tail number) used for departures on the date."
+
+      - name: total_unique_arrival_airplanes
+        description: "Number of distinct aircraft (by tail number) used for arrivals on the date."
+
+      - name: total_unique_departure_airlines
+        description: "Number of distinct airlines operating departures on the date."
+
+      - name: total_unique_arrival_airlines
+        description: "Number of distinct airlines operating arrivals on the date."
+
+      - name: avg_dep_delay
+        description: "Average departure delay in minutes for flights on the date."
+
+      - name: avg_arr_delay
+        description: "Average arrival delay in minutes for flights on the date."
+
+      - name: avg_temp_c
+        description: "Average daily air temperature in degrees Celsius."
+
+      - name: precipitation_mm
+        description: "Total daily precipitation in millimeters."
+
+      - name: avg_wind_speed_kmh
+        description: "Average daily wind speed in kilometers per hour."
+
+      - name: avg_wind_direction
+        description: "Average daily wind direction in degrees."
+
+      - name: avg_pressure_hpa
+        description: "Average daily atmospheric pressure in hectopascals (hPa)."
+
+  - name: harvey_mart_flights_airport_hourly_to_daily_aggregation_weather
+    description: "Daily airport-level flight performance metrics enriched with daily aggregated weather data. Hourly weather data was transformed to daily in the prep stage and joined to the daily flights mart."
+    columns:
+      - name: airport_code
+        description: "IATA airport code."
+        tests: [not_null]
+
+      - name: flight_date
+        description: "Date of flight and aggregated weather activity."
+        tests: [not_null]
+
+      - name: name
+        description: "Name of the airport."
+
+      - name: city
+        description: "City where the airport is located."
+
+      - name: country
+        description: "Country where the airport is located."
+        tests: [not_null]
+
+      - name: total_planned_flights
+        description: "Total number of planned flights on the date."
+
+      - name: total_planned_departure_flights
+        description: "Total number of planned departure flights on the date."
+
+      - name: total_planned_arrival_flights
+        description: "Total number of planned arrival flights on the date."
+
+      - name: total_cancelled_flights
+        description: "Total number of cancelled flights on the date."
+
+      - name: total_cancelled_departure_flights
+        description: "Total number of cancelled departure flights on the date."
+
+      - name: total_cancelled_arrival_flights
+        description: "Total number of cancelled arrival flights on the date."
+
+      - name: total_diverted_flights
+        description: "Total number of diverted flights on the date."
+
+      - name: total_diverted_departure_flights
+        description: "Total number of diverted departure flights on the date."
+
+      - name: total_diverted_arrival_flights
+        description: "Total number of diverted arrival flights on the date."
+
+      - name: total_actual_flights
+        description: "Total number of flights that actually operated on the date."
+
+      - name: total_actual_departure_flights
+        description: "Total number of flights that actually departed on the date."
+
+      - name: total_actual_arrival_flights
+        description: "Total number of flights that actually arrived on the date."
+
+      - name: total_cancellation_percentage
+        description: "Percentage of total planned flights that were cancelled on the date."
+
+      - name: departure_cancellation_percentage
+        description: "Percentage of planned departure flights that were cancelled on the date."
+
+      - name: arrival_cancellation_percentage
+        description: "Percentage of planned arrival flights that were cancelled on the date."
+
+      - name: total_diversion_percentage
+        description: "Percentage of total flights that were diverted on the date."
+
+      - name: departure_diversion_percentage
+        description: "Percentage of departure flights that were diverted on the date."
+
+      - name: arrival_diversion_percentage
+        description: "Percentage of arrival flights that were diverted on the date."
+
+      - name: total_unique_departure_airplanes
+        description: "Number of distinct aircraft (by tail number) used for departures on the date."
+
+      - name: total_unique_arrival_airplanes
+        description: "Number of distinct aircraft (by tail number) used for arrivals on the date."
+
+      - name: total_unique_departure_airlines
+        description: "Number of distinct airlines operating departures on the date."
+
+      - name: total_unique_arrival_airlines
+        description: "Number of distinct airlines operating arrivals on the date."
+
+      - name: avg_dep_delay
+        description: "Average departure delay in minutes for flights on the date."
+
+      - name: avg_arr_delay
+        description: "Average arrival delay in minutes for flights on the date."
+
+      - name: avg_temp_c
+        description: "Average daily air temperature in degrees Celsius."
+
+      - name: total_prec_mm
+        description: "Total daily precipitation in millimeters."
+
+      - name: avg_wind_speed_kmh
+        description: "Average daily wind speed in kilometers per hour."
+
+      - name: avg_wind_direction
+        description: "Average daily wind direction in degrees."
+
+      - name: avg_pressure_hpa
+        description: "Average daily atmospheric pressure in hectopascals (hPa)."
+
+    

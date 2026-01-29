@@ -767,4 +767,4 @@ models:
       - name: avg_pressure_hpa
         description: "Average daily atmospheric pressure in hectopascals (hPa)."
 
-    
+  

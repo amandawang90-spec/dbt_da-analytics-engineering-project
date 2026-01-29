@@ -195,8 +195,3 @@ models:
       - name: weather_condition_code
         description: "Weather condition code describing the observed conditions for the hour."
 
-
-
-
-
-

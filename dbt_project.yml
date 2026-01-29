@@ -4,7 +4,7 @@ version: '1.0.0'
 config-version: 2
 
 # The dbt profile to use (must exist in your dbt Cloud environment or local profiles.yml)
-profile: 'default'
+profile: 's_jingwang'
 
 # Paths for dbt resources
 model-paths: ["models"]

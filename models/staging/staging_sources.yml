@@ -4,10 +4,10 @@ sources:
   - name: weather_data
     schema: s_jingwang
     tables:
-      - name: harvey_weather_daily_raw_data
-        identifier: harvey_weather_daily_raw_data
-      - name: harvey_weather_hourly_raw_data
-        identifier: harvey_weather_hourly_raw_data
+      - name: harvey_weather_daily_raw
+        identifier: harvey_weather_daily_raw
+      - name: harvey_weather_hourly_raw
+        identifier: harvey_weather_hourly_raw
 
   - name: flights_data
     schema: s_jingwang
@@ -17,22 +17,186 @@ sources:
       - name: airports
         identifier: airports
       - name: regions
-        identifier: regions_2
+        identifier: regions
 
 models:
+
+  - name: harvey_stg_airports
+    description: "Staging table containing airport information with geographic and regional details."
+    columns:
+      - name: faa
+        description: "FAA airport code (unique identifier for the airport)."
+
+      - name: name
+        description: "Official name of the airport."
+
+      - name: lat
+        description: "Latitude of the airport in decimal degrees."
+
+      - name: lon
+        description: "Longitude of the airport in decimal degrees."
+
+      - name: alt
+        description: "Altitude of the airport in feet above sea level."
+
+      - name: tz
+        description: "Time zone of the airport relative to UTC."
+
+      - name: dst
+        description: "Daylight saving time indicator for the airport."
+
+      - name: city
+        description: "City where the airport is located."
+
+      - name: country
+        description: "Country where the airport is located."
+
+      - name: region
+        description: "Region of country where the airport is located."
+
+  - name: harvey_stag_flights
+    description: "Staging table containing detailed flight records including schedules, delays, and operational status."
+    columns:
+      - name: flight_date
+        description: "Date of the flight."
+
+      - name: dep_time
+        description: "Actual departure time of the flight (local time)."
+
+      - name: sched_dep_time
+        description: "Scheduled departure time of the flight (local time)."
+
+      - name: dep_delay
+        description: "Departure delay in minutes. Negative values indicate early departures."
+
+      - name: arr_time
+        description: "Actual arrival time of the flight (local time)."
+
+      - name: sched_arr_time
+        description: "Scheduled arrival time of the flight (local time)."
+
+      - name: arr_delay
+        description: "Arrival delay in minutes. Negative values indicate early arrivals."
+
+      - name: airline
+        description: "Airline code operating the flight."
+
+      - name: tail_number
+        description: "Unique aircraft tail number."
+
+      - name: flight_number
+        description: "Flight number assigned by the airline."
+
+      - name: origin
+        description: "Origin airport code (IATA)."
+
+      - name: dest
+        description: "Destination airport code (IATA)."
+
+      - name: air_time
+        description: "Time spent in the air in minutes."
+
+      - name: actual_elapsed_time
+        description: "Total elapsed time from departure to arrival in minutes."
+
+      - name: distance
+        description: "Distance between origin and destination airports in miles."
+
+      - name: cancelled
+        description: "Indicator if the flight was cancelled (1 = cancelled, 0 = not cancelled)."
+
+      - name: diverted
+        description: "Indicator if the flight was diverted (1 = diverted, 0 = not diverted)."
+
   - name: harvey_stg_weather_daily
     description: "Flattened daily weather data from the raw JSON source."
     columns:
       - name: airport_code
-        description: "IATA airport code."
+        description: "IATA airport code associated with the weather station."
+
+      - name: station_id
+        description: "Unique identifier for the weather observation station."
+
+      - name: date
+        description: "Date of the weather observation."
+
+      - name: avg_temp_c
+        description: "Average daily temperature in degrees Celsius."
+
+      - name: min_temp_c
+        description: "Minimum daily temperature in degrees Celsius."
+
+      - name: max_temp_c
+        description: "Maximum daily temperature in degrees Celsius."
+
+      - name: precipitation_mm
+        description: "Total daily precipitation in millimeters."
+
+      - name: max_snow_mm
+        description: "Maximum daily snowfall in millimeters."
+
+      - name: avg_wind_direction
+        description: "Average wind direction in degrees."
+
+      - name: avg_wind_speed_kmh
+        description: "Average wind speed in kilometers per hour."
+
+      - name: wind_peakgust_kmh
+        description: "Maximum wind gust speed recorded during the day in kilometers per hour."
+
+      - name: avg_pressure_hpa
+        description: "Average atmospheric pressure in hectopascals (hPa)."
+
+      - name: sun_minutes
+        description: "Total minutes of sunshine recorded during the day."
+
+  - name: harvey_stg_weather_hourly
+    description: "Flattened hourly weather data derived from raw JSON weather observations."
+    columns:
+      - name: airport_code
+        description: "IATA airport code associated with the weather station."
+
       - name: station_id
         description: "Weather station identifier."
-      - name: date
-        description: "Date of observation."
+
+      - name: timestamp
+        description: "Timestamp of the hourly weather observation."
+
       - name: avg_temp_c
-        description: "Average temperature (°C)."
+        description: "Hourly average air temperature in degrees Celsius."
+
+      - name: dew_point_in_c
+        description: "Hourly dew point temperature in degrees Celsius."
+
+      - name: humidity_in_percent
+        description: "Hourly relative humidity as a percentage."
+
       - name: precipitation_mm
-        description: "Precipitation amount in millimeters."
+        description: "Total precipitation during the hour in millimeters."
+
+      - name: max_snow_mm
+        description: "Maximum snowfall during the hour in millimeters."
+
+      - name: avg_wind_direction
+        description: "Average wind direction during the hour in degrees."
+
+      - name: avg_wind_speed
+        description: "Average wind speed during the hour."
+
+      - name: avg_peakgust
+        description: "Average peak wind gust speed during the hour."
+
+      - name: avg_pressure_hpa
+        description: "Average sea-level atmospheric pressure during the hour in hectopascals (hPa)."
+
+      - name: sun_minutes
+        description: "Total sunshine duration during the hour in minutes."
+
+      - name: weather_condition_code
+        description: "Weather condition code describing the observed conditions for the hour."
+
+
+
 
 
 

@@ -1,10 +1,10 @@
-{{ config(materialized='table', schema='s_jingwang') }}
+{{ config(materialized = 'table') }}
 
 WITH daily_raw AS (
     SELECT airport_code,
            station_id,
            JSON_ARRAY_ELEMENTS(extracted_data -> 'data') AS json_data
-    FROM  {{ source('weather_data', 'harvey_weather_daily_raw_data') }}
+    FROM  {{ source('weather_data', 'harvey_weather_daily_raw') }}
 ),
 daily_flattened AS (
     SELECT airport_code,

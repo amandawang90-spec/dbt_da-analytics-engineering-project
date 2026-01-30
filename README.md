@@ -96,8 +96,4 @@ Route Statistics
 - Aggregation Layers: Hourly → Daily, Flight × Weather
 - Derived Metrics: Distance in km, departure/arrival delay intervals, cancellation/diversion percentages
 
-## Usage
-1. Build all models:
-   ```bash
-   dbt run
 

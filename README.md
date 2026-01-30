@@ -1,7 +1,5 @@
 # neuefische_da_180825_analytics_engineering_project
 
-# Harvey Flights & Weather Analytics Project
-
 ## Overview
 This project analyzes flights and weather data during the Harvey hurricane period. It provides insights into flight performance, delays, cancellations, diversions, and the impact of weather. The project is implemented using dbt, with **Staging, Prep, and Mart layers** to create clean, tested, and analysis-ready datasets.
 

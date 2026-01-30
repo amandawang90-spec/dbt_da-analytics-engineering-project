@@ -54,7 +54,7 @@ models:
       - name: region
         description: "Region of country where the airport is located."
 
-  - name: harvey_stag_flights
+  - name: harvey_stg_flights
     description: "Staging table containing detailed flight records including schedules, delays, and operational status."
     columns:
       - name: flight_date
@@ -194,9 +194,4 @@ models:
 
       - name: weather_condition_code
         description: "Weather condition code describing the observed conditions for the hour."
-
-
-
-
-
 

@@ -89,7 +89,7 @@ models:
       - name: avg_pressure_hpa
         description: "Average daily atmospheric pressure in hectopascals (hPa), aggregated from hourly observations."
 
-  - name: harvey_mart_depature_flights_airport_hourly
+  - name: harvey_mart_departure_flights_airport_hourly
     description: "Hourly departure flight statistics aggregated at the airport level for reporting and analysis."
     columns:
       - name: airport_code
@@ -110,7 +110,7 @@ models:
         description: "Country where the departure airport is located."
         tests: [not_null]
 
-      - name: total_planned_departure_flights
+      - name: total_planned_deparrture_flights
         description: "Total number of planned departure flights during the hour."
 
       - name: total_cancelled_departure_flights
@@ -266,7 +266,7 @@ models:
       - name: avg_arr_delay
         description: "Average arrival delay in minutes for flights during the hour."
     
-  - name: harvey_mart_depature_flights_airport_daily
+  - name: harvey_mart_departure_flights_airport_daily
     description: "Daily departure flight statistics aggregated at the airport level for reporting and analysis."
     columns:
       - name: airport_code
@@ -443,7 +443,7 @@ models:
       - name: avg_arr_delay
         description: "Average arrival delay in minutes for flights on the date."
 
-  - name: harvey_mart_depature_flights_airport_hourly_weather
+  - name: harvey_mart_flights_airport_hourly_weather
     description: "Hourly airport-level flight performance metrics enriched with weather conditions for departure analysis."
     columns:
       - name: airport_code
@@ -551,7 +551,7 @@ models:
       - name: avg_pressure_hpa
         description: "Average atmospheric pressure during the hour in hectopascals (hPa)."
 
-  - name: harvey_mart_arrival_flights_airport_daily_weather
+  - name: harvey_mart_flights_airport_daily_weather
     description: "Daily airport-level flight performance metrics enriched with weather conditions for arrival and departure analysis."
     columns:
       - name: airport_code
@@ -767,4 +767,4 @@ models:
       - name: avg_pressure_hpa
         description: "Average daily atmospheric pressure in hectopascals (hPa)."
 
-    
+  

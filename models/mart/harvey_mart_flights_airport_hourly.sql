@@ -42,7 +42,7 @@ WITH departures_arrivals AS (
             / NULLIF(d.total_planned_departure_flights,0) * 100 AS departure_diversion_percentage,
         COALESCE(a.total_diverted_arrival_flights,0)::numeric
             / NULLIF(a.total_planned_arrival_flights,0) * 100 AS arrival_diversion_percentage
-    FROM {{ ref('harvey_mart_depature_flights_airport_hourly') }} d
+    FROM {{ ref('harvey_mart_departure_flights_airport_hourly') }} d
     FULL OUTER JOIN {{ ref('harvey_mart_arrival_flights_airport_hourly') }} a
         USING (airport_code, flight_datetime_hour)
 )

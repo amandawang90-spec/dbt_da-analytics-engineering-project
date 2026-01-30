@@ -1,6 +1,6 @@
 # dbt_project.yml
 name: neuefische_da_180825_analytics_engineering_project
-version: '1.0.0'
+version: '1.0'
 config-version: 2
 
 # The dbt profile to use (must exist in your dbt Cloud environment or local profiles.yml)
@@ -20,17 +20,11 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
-# Models configuration
 models:
   neuefische_da_180825_analytics_engineering_project:
-    # All models under models/staging/ will go to the 'staging' schema
     staging:
-      materialized: table
-
-# Optional placeholders for other folders (if you have them)
+      +schema: s_jingwang
     prep:
-      materialized: table
+      +schema: s_jingwang
     mart:
-      materialized: table
-
-
+      +schema: s_jingwang

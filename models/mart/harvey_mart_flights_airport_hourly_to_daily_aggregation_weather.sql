@@ -36,7 +36,7 @@ SELECT
     hmwhtd.avg_wind_direction,
     hmwhtd.avg_pressure_hpa
 FROM {{ ref('harvey_mart_flights_airport_daily') }} AS hmdfad
-LEFT JOIN {{ ref('harvey_mart_weather_hourly_to_daily') }} AS hmwhtd
+LEFT JOIN {{ ref('harvey_mart_weather_hourly_to_daily_aggregation') }} AS hmwhtd
      ON hmdfad.airport_code = hmwhtd.airport_code
     AND hmdfad.flight_date = hmwhtd.date
 ORDER BY airport_code, flight_date
